@@ -34,8 +34,21 @@ def custom_score(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
-    # TODO: finish this function!
-    raise NotImplementedError
+    # Simplest strategy
+    # my moves- 2* opp moves
+    # TODO: Experiment with variable weight
+    
+    if game.is_loser(player):
+        return(float("-inf"))
+        
+    if game.is_winner(player):
+        return(float("inf"))
+        
+    my_moves_count=len(game.get_legal_moves(player))
+    opp_moves_count=len(game.get_legal_moves(game.get_opponent(player)))
+    score=float(my_moves_count-2*opp_moves_count)
+    
+    return score
 
 
 def custom_score_2(game, player):
@@ -60,8 +73,20 @@ def custom_score_2(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
-    # TODO: finish this function!
-    raise NotImplementedError
+    my_moves_count=len(game.get_legal_moves(player))
+    my_moves=game.get_legal_moves(player)
+    
+    opp_moves_count= float("inf")
+    
+    for move in my_moves:
+        forecasted_game=game.forecast_move(move)
+        forecasted_opp_moves_count=forecasted_game.get_legal_moves(game.get_opponent(player))
+        
+        if not opp_moves_count==float("inf") or len(forecasted_opp_moves_count)<opp_moves_count:
+            opp_moves_count=len(forecasted_opp_moves_count)
+    
+    score= float( my_moves_count-2*opp_moves_count)
+    return score
 
 
 def custom_score_3(game, player):
