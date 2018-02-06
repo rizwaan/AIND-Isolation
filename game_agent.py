@@ -36,7 +36,7 @@ def custom_score(game, player):
     """
     # Simplest strategy
     # my moves- 2* opp moves
-    # TODO: Experiment with variable weight
+    # Maybe Experiment with variable weight?
     
     if game.is_loser(player):
         return(float("-inf"))
@@ -73,6 +73,14 @@ def custom_score_2(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
+    
+    if game.is_loser(player):
+        return(float("-inf"))
+        
+    if game.is_winner(player):
+        return(float("inf"))
+        
+        
     my_moves_count=len(game.get_legal_moves(player))
     my_moves=game.get_legal_moves(player)
     
@@ -111,8 +119,20 @@ def custom_score_3(game, player):
     float
         The heuristic value of the current game state to the specified player.
     """
-    # TODO: finish this function!
-    raise NotImplementedError
+    if game.is_loser(player):
+        return(float("-inf"))
+        
+    if game.is_winner(player):
+        return(float("inf"))
+        
+        
+    
+    blank_spaces = len(game.get_blank_spaces())
+    my_moves_count = len(game.get_legal_moves(player))
+    opp_moves_count=len(game.get_legal_moves(game.get_opponent(player)))
+    
+    score = (my_moves_count - 2* opp_moves_count)+blank_spaces/2
+    return score
 
 
 class IsolationPlayer:
