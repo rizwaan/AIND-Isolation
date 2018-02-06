@@ -95,3 +95,5 @@ ENV/
 .ropeproject
 
 # End of https://www.gitignore.io/api/python
+~$uristic_analysis.docx
+~WRL0005.tmp
