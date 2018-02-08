@@ -375,7 +375,7 @@ class AlphaBetaPlayer(IsolationPlayer):
             except SearchTimeout:
                 break
 
-        return (best_move)
+        return best_move
     
     
     #### Implement helper functions and main alphabeta alog as per AIMA text Section 5.3.1 and Fig 5.7
@@ -399,7 +399,7 @@ class AlphaBetaPlayer(IsolationPlayer):
         for move in game.get_legal_moves():
             value = min(minimum_value, self.max_value(game.forecast_move(move), depth - 1, alpha, beta))
             if minimum_value <= alpha:
-                return value
+                return minimum_value
             beta = min(beta, minimum_value)
         return minimum_value
     
@@ -420,11 +420,11 @@ class AlphaBetaPlayer(IsolationPlayer):
         ### Iterate over all moves, applying every move to the game and deducing max value from the min vals of next level
         ### Update alpha at every iteration
         for move in game.get_legal_moves():
-            maximum_value = max(maximum_value, self.min_value(game.forecast_move(move), depth - 1, alpha, beta))
+            maximum_value = max(maximum_value, self.min_value(game.forecast_move(move), depth-1, alpha, beta))
             if maximum_value >= beta:
                 return maximum_value
             alpha = max(alpha, maximum_value)
-        return value
+        return maximum_value
     
     def alphabeta(self, game, depth, alpha=float("-inf"), beta=float("inf")):
         """Implement depth-limited minimax search with alpha-beta pruning as
@@ -489,6 +489,8 @@ class AlphaBetaPlayer(IsolationPlayer):
             if temp_score > best_score:
                 best_score = temp_score
                 best_move = move
+            if best_score>=beta:
+                return best_move
             alpha = max(alpha, temp_score)
 
         return best_move
