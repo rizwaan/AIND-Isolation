@@ -306,7 +306,7 @@ class MinimaxPlayer(IsolationPlayer):
             raise SearchTimeout()
             
 
-        # Main minimax algo 
+        # Main minimax algo as per the AIMA text
         
         # Reminder: Root node is a max node
         best_score = float("-inf")
@@ -364,9 +364,68 @@ class AlphaBetaPlayer(IsolationPlayer):
         """
         self.time_left = time_left
 
-        # TODO: finish this function!
-        raise NotImplementedError
+        
+        #initialize best move coordinates
+        best_move = (-1,-1)
+        # Keep searching for best move until time runs out.
+        for i in range (0, 10000):
+            try:
+                best_move = self.alphabeta(game, i)
+            # return best move upon timeout exception
+            except SearchTimeout:
+                break
 
+        return (best_move)
+    
+    
+    #### Implement helper functions and main alphabeta alog as per AIMA text Section 5.3.1 and Fig 5.7
+    
+    def min_value(self, game, depth, alpha, beta):
+        
+        ### Timer check as per notes 
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+        
+        ### Terminal test : End of game? or max depth reached
+        if depth == 0 or len(game.get_legal_moves()) == 0:
+            return self.score(game, self)
+        
+        ### Large value to avoid range conflict
+        minimum_value = float("inf")
+        
+        ### Iterate over all moves, applying every move to the game and deducing min value from the max vals of next level
+        ### Update beta at every iteration
+        
+        for move in game.get_legal_moves():
+            value = min(minimum_value, self.max_value(game.forecast_move(move), depth - 1, alpha, beta))
+            if minimum_value <= alpha:
+                return value
+            beta = min(beta, minimum_value)
+        return minimum_value
+    
+    
+    def max_value(self, game, depth, alpha, beta):
+        
+        ### Timer check as per notes 
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+        
+        ### Terminal test : End of game? or max depth reached
+        if depth == 0 or len(game.get_legal_moves()) == 0:
+            return self.score(game, self)
+        
+        ### Smallest value to avoid range conflict
+        maximum_value = float("-inf")
+        
+        ### Iterate over all moves, applying every move to the game and deducing max value from the min vals of next level
+        ### Update alpha at every iteration
+        for move in game.get_legal_moves():
+            maximum_value = max(maximum_value, self.min_value(game.forecast_move(move), depth - 1, alpha, beta))
+            if maximum_value >= beta:
+                return maximum_value
+            alpha = max(alpha, maximum_value)
+        return value
+    
     def alphabeta(self, game, depth, alpha=float("-inf"), beta=float("inf")):
         """Implement depth-limited minimax search with alpha-beta pruning as
         described in the lectures.
@@ -415,5 +474,21 @@ class AlphaBetaPlayer(IsolationPlayer):
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
 
-        # TODO: finish this function!
-        raise NotImplementedError
+        ##### Main Alpha Beta algo
+        
+        ## Initialize best move coordinates
+        best_move = (-1, -1)
+        ## Reminder : root node is a max node
+        best_score = float("-inf")
+
+        ## Main recursive search to run alpha beta and deduce best score and move
+        ## root node is a max node
+        
+        for move in game.get_legal_moves():
+            temp_score = self.min_value(game.forecast_move(move), depth-1, alpha, beta)
+            if temp_score > best_score:
+                best_score = temp_score
+                best_move = move
+            alpha = max(alpha, temp_score)
+
+        return best_move
