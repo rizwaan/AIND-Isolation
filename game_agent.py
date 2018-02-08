@@ -219,12 +219,47 @@ class MinimaxPlayer(IsolationPlayer):
     ##### Modeled on the AIMA textbook algorithm
     ##### Reference AIMA Section 5.2.2  Figure 5.3
     
-    define min_value(self,game,depth):
-        raise NotImplementedError
+    def min_value(self,game,depth):
+        
+        ### Timer check as per notes 
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+            
+        #Terminal test : Max depth reached? or end of game for player?
+        
+        if depth==0 or len(game.get_legal_moves())==0:
+            return self.score(game,self)
+        
+        # Highest value in prep for selecting min value to avoid range conflicts
+        minimum_value=float("inf")
+        
+        # Iterate over all moves and select min value from the max values of next level
+        for move in game.get_legal_moves():
+            minimum_value=min(minimum_value, self.max_value(game.forecast_move(move),depth-1))
+        
+        return minimum_value
     
     
-    define max_value(self,game,depth):
-        raise NotImplementedError
+    def max_value(self,game,depth):
+        
+        ### Timer check as per notes 
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+            
+        #Terminal test : Max depth reached? or end of game for player?
+        if depth==0 or len(game.get_legal_moves())==0:
+            return self.score(game,self)
+        
+        # Lowest value in prep for selecting max value to avoid range conflicts
+        maximum_value=float("-inf")
+        
+        # Iterate over all moves and select max value from the min values of next level
+        
+        for move in game.get_legal_moves():
+            maximum_value=max(maximum_value,self.min_value(game.forecast_move(move),depth-1))
+
+        
+        return maximum_value
     
     
 
@@ -269,9 +304,26 @@ class MinimaxPlayer(IsolationPlayer):
         """
         if self.time_left() < self.TIMER_THRESHOLD:
             raise SearchTimeout()
+            
 
-        # TODO: finish this function!
-        raise NotImplementedError
+        # Main minimax algo 
+        
+        # Reminder: Root node is a max node
+        best_score = float("-inf")
+        
+        # Initial coordinates for best move
+        best_move = (-1, -1)
+
+        # Implement recursive search to find best move and score
+        # Reminder: Root node is a max node
+        
+        for move in game.get_legal_moves():
+            temp_score = self.min_value(game.forecast_move(move), depth-1)
+            if temp_score > best_score:
+                best_score = temp_score
+                best_move = move
+
+        return best_move
 
 
 class AlphaBetaPlayer(IsolationPlayer):
