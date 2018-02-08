@@ -214,6 +214,19 @@ class MinimaxPlayer(IsolationPlayer):
 
         # Return the best move from the last completed search iteration
         return best_move
+    
+    ##### Helper functions for minimax algorithm.
+    ##### Modeled on the AIMA textbook algorithm
+    ##### Reference AIMA Section 5.2.2  Figure 5.3
+    
+    define min_value(self,game,depth):
+        raise NotImplementedError
+    
+    
+    define max_value(self,game,depth):
+        raise NotImplementedError
+    
+    
 
     def minimax(self, game, depth):
         """Implement depth-limited minimax search algorithm as described in
