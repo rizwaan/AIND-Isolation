@@ -202,7 +202,12 @@ class MinimaxPlayer(IsolationPlayer):
 
         # Initialize the best move so that this function returns something
         # in case the search fails due to timeout
-        best_move = (-1, -1)
+        legal_moves=game.get_legal_moves(self)
+        
+        if bool(legal_moves):
+            best_move=legal_moves[0]
+        else:
+            return (-1, -1)
 
         try:
             # The try/except block will automatically catch the exception
@@ -366,7 +371,13 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         
         #initialize best move coordinates
-        best_move = (-1,-1)
+        legal_moves= game.get_legal_moves(self)
+        
+        if bool(legal_moves):
+            best_move=legal_moves[0]
+        else:
+            return (-1,-1)
+        
         # Keep searching for best move until time runs out.
         for i in range (0, 10000):
             try:
