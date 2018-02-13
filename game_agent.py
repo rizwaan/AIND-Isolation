@@ -47,8 +47,12 @@ def custom_score(game, player):
     my_moves_count=len(game.get_legal_moves(player))
     opp_moves_count=len(game.get_legal_moves(game.get_opponent(player)))
     score=float(my_moves_count-2*opp_moves_count)
-    
     return score
+    
+
+
+    
+    
 
 
 def custom_score_2(game, player):
@@ -95,8 +99,9 @@ def custom_score_2(game, player):
     
     score= float( my_moves_count-2*opp_moves_count)
     return score
+        
 
-
+    
 def custom_score_3(game, player):
     """Calculate the heuristic value of a game state from the point of view
     of the given player.
@@ -317,7 +322,12 @@ class MinimaxPlayer(IsolationPlayer):
         best_score = float("-inf")
         
         # Initial coordinates for best move
-        best_move = (-1, -1)
+        legal_moves=game.get_legal_moves(self)
+        
+        if bool(legal_moves):
+            best_move=legal_moves[0]
+        else:
+            return (-1, -1)
 
         # Implement recursive search to find best move and score
         # Reminder: Root node is a max node
@@ -488,7 +498,12 @@ class AlphaBetaPlayer(IsolationPlayer):
         ##### Main Alpha Beta algo
         
         ## Initialize best move coordinates
-        best_move = (-1, -1)
+        legal_moves=game.get_legal_moves(self)
+        
+        if bool(legal_moves):
+            best_move=legal_moves[0]
+        else:
+            return (-1, -1)
         ## Reminder : root node is a max node
         best_score = float("-inf")
 
