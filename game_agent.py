@@ -48,8 +48,7 @@ def custom_score(game, player):
     opp_moves_count=len(game.get_legal_moves(game.get_opponent(player)))
     score=float(my_moves_count-2*opp_moves_count)
     return score
-    
-
+        
 
     
     
@@ -207,7 +206,7 @@ class MinimaxPlayer(IsolationPlayer):
 
         # Initialize the best move so that this function returns something
         # in case the search fails due to timeout
-        legal_moves=game.get_legal_moves(self)
+        legal_moves=game.get_legal_moves()
         
         if bool(legal_moves):
             best_move=legal_moves[0]
@@ -322,7 +321,8 @@ class MinimaxPlayer(IsolationPlayer):
         best_score = float("-inf")
         
         # Initial coordinates for best move
-        legal_moves=game.get_legal_moves(self)
+#        get_legal_moves(self) will try to always evaluate the moves of your player. in other words, your opponent will ignore their own moves and try to use yours instead.
+        legal_moves=game.get_legal_moves()
         
         if bool(legal_moves):
             best_move=legal_moves[0]
@@ -381,7 +381,7 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         
         #initialize best move coordinates
-        legal_moves= game.get_legal_moves(self)
+        legal_moves= game.get_legal_moves()
         
         if bool(legal_moves):
             best_move=legal_moves[0]
@@ -389,12 +389,23 @@ class AlphaBetaPlayer(IsolationPlayer):
             return (-1,-1)
         
         # Keep searching for best move until time runs out.
-        for i in range (0, 10000):
-            try:
-                best_move = self.alphabeta(game, i)
-            # return best move upon timeout exception
-            except SearchTimeout:
-                break
+        depth=1
+        
+        try:
+            while True:
+                temp_move = self.alphabeta(game, depth)
+                
+                # If no moves are found, retun best move
+                if not temp_move:
+                    return best_move
+                else:
+                    # Update best move upon successfull search
+                    best_move=temp_move
+                # Increment depth to continue searching
+                depth+=1
+        # return best move upon timeout exception
+        except SearchTimeout:
+            return best_move
 
         return best_move
     
@@ -498,7 +509,8 @@ class AlphaBetaPlayer(IsolationPlayer):
         ##### Main Alpha Beta algo
         
         ## Initialize best move coordinates
-        legal_moves=game.get_legal_moves(self)
+#        get_legal_moves(self) will try to always evaluate the moves of your player. in other words, your opponent will ignore their own moves and try to use yours instead.
+        legal_moves=game.get_legal_moves()
         
         if bool(legal_moves):
             best_move=legal_moves[0]
