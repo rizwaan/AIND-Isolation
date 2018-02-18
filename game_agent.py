@@ -429,7 +429,7 @@ class AlphaBetaPlayer(IsolationPlayer):
         ### Update beta at every iteration
         
         for move in game.get_legal_moves():
-            value = min(minimum_value, self.max_value(game.forecast_move(move), depth - 1, alpha, beta))
+            minimum_value = min(minimum_value, self.max_value(game.forecast_move(move), depth - 1, alpha, beta))
             if minimum_value <= alpha:
                 return minimum_value
             beta = min(beta, minimum_value)
